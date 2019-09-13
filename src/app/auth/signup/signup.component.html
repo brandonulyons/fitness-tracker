@@ -33,13 +33,25 @@
         matInput
         [matDatepicker]="picker"
         placeholder="Your Birthdate"
-        [max]="maxDate">
+        [max]="maxDate"
+        ngModel
+        name="birthdate"
+        required>
       <mat-datepicker-toggle
         matSuffix
-        [for]="picker">
-      </mat-datepicker-toggle>
+        [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
+
+    <mat-checkbox
+      labelPosition="after"
+      ngModel
+      name="agree"
+      required
+      color="primary">
+      Agree to Terms and Conditions.
+    </mat-checkbox>
+
 
     <button type="submit" mat-raised-button color="primary">
       Submit
