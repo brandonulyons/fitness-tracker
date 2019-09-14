@@ -1,2 +1,23 @@
+<mat-sidenav-container>
+  <!-- <mat-sidenav opened="true" > -->
+  <mat-sidenav #sidenav role="navigation" >
+    <p>Iam sidebar low!</p>
+  </mat-sidenav>
 
-<router-outlet></router-outlet>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <div>
+        <button (click)="sidenav.toggle()">open Sidenav</button>
+      </div>
+      <div>LOGO</div>
+      <div>
+        <a routerLink="/signup">Signup</a>
+        <a routerLink="/login">Login</a>
+        <a routerLink="/trainig">Training</a>
+      </div>
+    </mat-toolbar>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
