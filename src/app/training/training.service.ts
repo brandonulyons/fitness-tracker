@@ -8,7 +8,14 @@ export class TrainingService {
     { id: 'burpees', name: 'Burpees', duration: 60, calories: 8 }
   ];
 
+  private runningExercise: Exercise;
+
   getAvailableExercises() {
     return this.availableExercises.slice();
+  }
+
+  startExercise(selectedId: string) {
+    const selectedExercise = this.availableExercises.find(ex => ex.id === selectedId);
+    this.runningExercise = selectedExercise;
   }
 }
