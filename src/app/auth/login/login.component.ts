@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, NgForm } from '@angular/forms';
+import { AuthService } from '../auth.service';
 
 import { Observable } from 'rxjs';
 
@@ -11,7 +12,7 @@ import { Observable } from 'rxjs';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
     this.loginForm = new FormGroup({
@@ -21,10 +22,6 @@ export class LoginComponent implements OnInit {
       password: new FormControl('',
         { validators: [Validators.required] })
     });
-  }
-
-  onLogin() {
-    console.log(this.loginForm);
   }
 
   forbiddenEmails(control: FormControl): Promise<any> | Observable<any> {
@@ -37,5 +34,12 @@ export class LoginComponent implements OnInit {
       }
     });
     return promise;
+  }
+
+  onLogin(form: NgForm) {
+    this.authService.login({
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password
+    });
   }
 }
