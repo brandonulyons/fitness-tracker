@@ -6,6 +6,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { MaterialModule } from './material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { environment } from '../environments/environment';
 
 import { AuthService } from './auth/auth.service';
 import { TrainingService } from './training/training.service';
@@ -43,6 +46,8 @@ import { StopTrainingComponent } from './training/current-training/stop-training
     MaterialModule,
     FlexLayoutModule,
     FormsModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule
   ],
   providers: [AuthService, TrainingService],
   bootstrap: [AppComponent],
