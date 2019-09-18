@@ -6,6 +6,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 
 import { User } from './user.model';
 import { AuthData } from './auth-data.model';
+import { TrainingService } from '../training/training.service';
 
 
 @Injectable()
@@ -15,10 +16,29 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private firebaseAuth: AngularFireAuth
+    private firebaseAuth: AngularFireAuth,
+    private trainingService: TrainingService
   ) { }
 
+  initAuthListener() {
+    this.firebaseAuth
+        .authState
+        .subscribe(user => {
+          if (user) {
+            this.isAuthenticated = true;
+            this.authChange.next(true);
+            this.router.navigate(['/training']);
+          } else {
+            this.trainingService.cancelSubscriptions();
+            this.authChange.next(false);
+            this.router.navigate(['/login']);
+            this.isAuthenticated = false;
+          }
+        });
+  }
+
   registerUser(authData: AuthData) {
+    console.log('Signup:', authData);
     this.firebaseAuth
         .auth
         .createUserWithEmailAndPassword(
@@ -26,8 +46,7 @@ export class AuthService {
           authData.password
         )
         .then(result => {
-          console.log(result);
-          this.authSuccessfully();
+          console.log('result Signup:', result);
         })
         .catch(err => {
           console.log('Something went wrong:', err.message);
@@ -35,6 +54,7 @@ export class AuthService {
   }
 
   login(authData: AuthData) {
+    console.log('Login:', authData);
     this.firebaseAuth
         .auth
         .signInWithEmailAndPassword(
@@ -42,8 +62,7 @@ export class AuthService {
           authData.password
         )
         .then(result => {
-          console.log(result);
-          this.authSuccessfully();
+          console.log('result Login:', result);
         })
         .catch(err => {
           console.log('Something went wrong:', err.message);
@@ -51,18 +70,10 @@ export class AuthService {
   }
 
   logout() {
-    this.authChange.next(false);
-    this.router.navigate(['/login']);
-    this.isAuthenticated = false;
+    this.firebaseAuth.auth.signOut();
   }
 
   isAuth() {
     return this.isAuthenticated;
-  }
-
-  private authSuccessfully() {
-    this.isAuthenticated = true;
-    this.authChange.next(true);
-    this.router.navigate(['/training']);
   }
 }
