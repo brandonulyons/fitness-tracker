@@ -3,11 +3,9 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { AngularFireAuth } from 'angularfire2/auth';
 
-
 import { User } from './user.model';
 import { AuthData } from './auth-data.model';
 import { TrainingService } from '../training/training.service';
-
 
 @Injectable()
 export class AuthService {
@@ -16,61 +14,48 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private firebaseAuth: AngularFireAuth,
+    private afAuth: AngularFireAuth,
     private trainingService: TrainingService
-  ) { }
+  ) {}
 
   initAuthListener() {
-    this.firebaseAuth
-        .authState
-        .subscribe(user => {
-          if (user) {
-            this.isAuthenticated = true;
-            this.authChange.next(true);
-            this.router.navigate(['/training']);
-          } else {
-            this.trainingService.cancelSubscriptions();
-            this.authChange.next(false);
-            this.router.navigate(['/login']);
-            this.isAuthenticated = false;
-          }
-        });
+    this.afAuth.authState.subscribe(user => {
+      if (user) {
+        this.isAuthenticated = true;
+        this.authChange.next(true);
+        this.router.navigate(['/training']);
+      } else {
+        this.trainingService.cancelSubscriptions();
+        this.authChange.next(false);
+        this.router.navigate(['/login']);
+        this.isAuthenticated = false;
+      }
+    });
   }
 
   registerUser(authData: AuthData) {
-    console.log('Signup:', authData);
-    this.firebaseAuth
-        .auth
-        .createUserWithEmailAndPassword(
-          authData.email,
-          authData.password
-        )
-        .then(result => {
-          console.log('result Signup:', result);
-        })
-        .catch(err => {
-          console.log('Something went wrong:', err.message);
-        });
+    this.afAuth.auth
+      .createUserWithEmailAndPassword(authData.email, authData.password)
+      .then(result => {
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   login(authData: AuthData) {
-    console.log('Login:', authData);
-    this.firebaseAuth
-        .auth
-        .signInWithEmailAndPassword(
-          authData.email,
-          authData.password
-        )
-        .then(result => {
-          console.log('result Login:', result);
-        })
-        .catch(err => {
-          console.log('Something went wrong:', err.message);
-        });
+    this.afAuth.auth
+      .signInWithEmailAndPassword(authData.email, authData.password)
+      .then(result => {
+        console.log(result);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   logout() {
-    this.firebaseAuth.auth.signOut();
+    this.afAuth.auth.signOut();
   }
 
   isAuth() {
