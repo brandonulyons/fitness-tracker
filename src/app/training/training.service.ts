@@ -22,7 +22,7 @@ export class TrainingService {
         .collection('availableExercises')
         .snapshotChanges()
         .map(docArray => {
-          return docArray.map(doc => {
+          return docArray.map((doc: any) => {
             return {
               id: doc.payload.doc.id,
               name: doc.payload.doc.data().name,
@@ -34,6 +34,8 @@ export class TrainingService {
         .subscribe((exercises: Exercise[]) => {
           this.availableExercises = exercises;
           this.exercisesChanged.next([...this.availableExercises]);
+        }, error => {
+          console.log('training service: ', error);
         });
   }
 
