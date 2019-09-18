@@ -8,12 +8,10 @@ import { User } from './user.model';
 import { AuthData } from './auth-data.model';
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AuthService {
   authChange = new Subject<boolean>();
-  private user: User;
+  private isAuthenticated = false;
 
   constructor(
     private router: Router,
@@ -27,8 +25,9 @@ export class AuthService {
           authData.email,
           authData.password
         )
-        .then(value => {
-          console.log('Success!', value);
+        .then(result => {
+          console.log(result);
+          this.authSuccessfully();
         })
         .catch(err => {
           console.log('Something went wrong:', err.message);
@@ -42,8 +41,9 @@ export class AuthService {
           authData.email,
           authData.password
         )
-        .then(value => {
-          console.log('Nice, it worked!');
+        .then(result => {
+          console.log(result);
+          this.authSuccessfully();
         })
         .catch(err => {
           console.log('Something went wrong:', err.message);
@@ -51,20 +51,17 @@ export class AuthService {
   }
 
   logout() {
-    this.user = null;
     this.authChange.next(false);
     this.router.navigate(['/login']);
-  }
-
-  getUser() {
-    return { ...this.user };
+    this.isAuthenticated = false;
   }
 
   isAuth() {
-    return this.user != null;
+    return this.isAuthenticated;
   }
 
   private authSuccessfully() {
+    this.isAuthenticated = true;
     this.authChange.next(true);
     this.router.navigate(['/training']);
   }
