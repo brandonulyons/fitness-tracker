@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { TrainingRoutingModule } from './training-routing.module';
+
 
 import { TrainingComponent } from './training.component';
 import { CurrentTrainingComponent } from './current-training/current-training.component';
@@ -17,8 +18,8 @@ import { StopTrainingComponent } from './current-training/stop-training.componen
     StopTrainingComponent
   ],
   imports: [
-    AngularFirestoreModule,
-    SharedModule
+    SharedModule,
+    TrainingRoutingModule
   ],
   providers: [],
   bootstrap: [],
