@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
@@ -13,15 +13,15 @@ import { TrainingService } from '../training.service';
 export class PastTrainingsComponent implements OnInit, AfterViewInit, OnDestroy {
   displayedColumns = ['date', 'name', 'calories', 'duration', 'state'];
   dataSource = new MatTableDataSource<Exercise>();
-  private exchangedSubscription: Subscription;
+  private exChangedSubscription: Subscription;
 
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  constructor(private trainingService: TrainingService) { }
+  constructor(private trainingService: TrainingService) {}
 
   ngOnInit() {
-    this.exchangedSubscription = this.trainingService.finishedExercisesChanged.subscribe(
+    this.exChangedSubscription = this.trainingService.finishedExercisesChanged.subscribe(
       (exercises: Exercise[]) => {
         this.dataSource.data = exercises;
       }
@@ -39,6 +39,8 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy() {
-    this.exchangedSubscription.unsubscribe();
+    if (this.exChangedSubscription) {
+      this.exChangedSubscription.unsubscribe();
+    }
   }
 }
