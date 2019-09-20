@@ -14,7 +14,7 @@ export interface TrainingState {
   activeTraining: Exercise;
 }
 
-export interface  State extends fromRoot.State {
+export interface State extends fromRoot.State {
   training: TrainingState;
 }
 

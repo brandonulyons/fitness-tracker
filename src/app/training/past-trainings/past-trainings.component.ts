@@ -1,4 +1,9 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit
+} from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { Store } from '@ngrx/store';
 
@@ -20,7 +25,8 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private trainingService: TrainingService,
-    private store: Store<fromTraining.State>) {}
+    private store: Store<fromTraining.State>
+  ) {}
 
   ngOnInit() {
     this.store.select(fromTraining.getFinishedExercises).subscribe(

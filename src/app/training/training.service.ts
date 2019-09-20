@@ -26,20 +26,21 @@ export class TrainingService {
     this.store.dispatch(new UI.StartLoading());
     this.fbSubs.push(
       this.db
-          .collection('availableExercises')
-          .snapshotChanges()
-          .map(docArray => {
-            // throw(new Error());
-            return docArray.map(doc => {
-              return {
-                id: doc.payload.doc.id,
-                name: doc.payload.doc.data()['name'],
-                duration: doc.payload.doc.data()['duration'],
-                calories: doc.payload.doc.data()['calories']
-              };
-            });
-          })
-          .subscribe((exercises: Exercise[]) => {
+        .collection('availableExercises')
+        .snapshotChanges()
+        .map(docArray => {
+          // throw(new Error());
+          return docArray.map(doc => {
+            return {
+              id: doc.payload.doc.id,
+              name: doc.payload.doc.data()['name'],
+              duration: doc.payload.doc.data()['duration'],
+              calories: doc.payload.doc.data()['calories']
+            };
+          });
+        })
+        .subscribe(
+          (exercises: Exercise[]) => {
             this.store.dispatch(new UI.StopLoading());
             this.store.dispatch(new Training.SetAvailableTrainings(exercises));
           }, error => {
@@ -47,8 +48,9 @@ export class TrainingService {
             this.uiService.showSnackBar(
               'Fetching Exercises failed, please try again later!', null, 3000
             );
-          })
-      );
+          }
+        )
+    );
   }
 
   startExercise(selectedId: string) {
@@ -80,12 +82,14 @@ export class TrainingService {
   }
 
   fetchCompletedOrCancelledExercises() {
-    this.fbSubs.push(this.db
-      .collection('finishedExercises')
-      .valueChanges()
-      .subscribe((exercises: Exercise[]) => {
-        this.store.dispatch(new Training.SetFinishedTrainings(exercises));
-      }));
+    this.fbSubs.push(
+      this.db
+        .collection('finishedExercises')
+        .valueChanges()
+        .subscribe((exercises: Exercise[]) => {
+          this.store.dispatch(new Training.SetFinishedTrainings(exercises));
+        })
+    );
   }
 
   cancelSubscriptions() {
