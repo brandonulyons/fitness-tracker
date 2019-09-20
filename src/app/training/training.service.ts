@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { Subject } from 'rxjs/Subject';
+
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import 'rxjs/add/operator/map';
@@ -14,11 +14,6 @@ import * as Training from './training.actions';
 
 @Injectable()
 export class TrainingService {
-  exerciseChanged = new Subject<Exercise>();
-  exercisesChanged = new Subject<Exercise[]>();
-  finishedExercisesChanged = new Subject<Exercise[]>();
-  private availableExercises: Exercise[] = [];
-  private runningExercise: Exercise;
   private fbSubs: Subscription[] = [];
 
   constructor(
@@ -29,28 +24,31 @@ export class TrainingService {
 
   fetchAvailableExercises() {
     this.store.dispatch(new UI.StartLoading());
-    this.fbSubs.push(this.db
-      .collection('availableExercises')
-      .snapshotChanges()
-      .map(docArray => {
-        // throw(new Error());
-        return docArray.map(doc => {
-          return {
-            id: doc.payload.doc.id,
-            name: doc.payload.doc.data()['name'],
-            duration: doc.payload.doc.data()['duration'],
-            calories: doc.payload.doc.data()['calories']
-          };
-        });
-      })
-      .subscribe((exercises: Exercise[]) => {
-        this.store.dispatch(new UI.StopLoading());
-        this.store.dispatch(new Training.SetAvailableTrainings(exercises));
-      }, error => {
-        this.store.dispatch(new UI.StopLoading());
-        this.uiService.showSnackBar('Fetching Exercises failed, please try again later!', null, 3000);
-        this.exercisesChanged.next(null);
-      }));
+    this.fbSubs.push(
+      this.db
+          .collection('availableExercises')
+          .snapshotChanges()
+          .map(docArray => {
+            // throw(new Error());
+            return docArray.map(doc => {
+              return {
+                id: doc.payload.doc.id,
+                name: doc.payload.doc.data()['name'],
+                duration: doc.payload.doc.data()['duration'],
+                calories: doc.payload.doc.data()['calories']
+              };
+            });
+          })
+          .subscribe((exercises: Exercise[]) => {
+            this.store.dispatch(new UI.StopLoading());
+            this.store.dispatch(new Training.SetAvailableTrainings(exercises));
+          }, error => {
+            this.store.dispatch(new UI.StopLoading());
+            this.uiService.showSnackBar(
+              'Fetching Exercises failed, please try again later!', null, 3000
+            );
+          })
+      );
   }
 
   startExercise(selectedId: string) {

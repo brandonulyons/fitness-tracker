@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -16,7 +15,7 @@ export class TrainingComponent implements OnInit {
 
   constructor(
     private trainingService: TrainingService,
-    private store: Store<{ui: fromTraining.State}>) {}
+    private store: Store<fromTraining.State>) {}
 
   ngOnInit() {
     this.ongoingTraining$ = this.store.select(fromTraining.getIsTraining);
