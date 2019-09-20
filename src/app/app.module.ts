@@ -15,7 +15,7 @@ import { environment } from '../environments/environment';
 import { UIService } from './shared/ui.service';
 import { TrainingService } from './training/training.service';
 import { AuthService } from './auth/auth.service';
-import { appReducer } from './app.reducer';
+import { reducers } from './app.reducer';
 
 import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
@@ -39,7 +39,7 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
     AngularFireModule.initializeApp(environment.firebase),
     AuthModule,
     AngularFirestoreModule,
-    StoreModule.forRoot({ui: appReducer})
+    StoreModule.forRoot(reducers)
   ],
   providers: [AuthService, TrainingService, UIService],
   bootstrap: [AppComponent]
